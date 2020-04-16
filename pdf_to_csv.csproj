@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="sautinsoft.pdffocus" Version="7.5.3.27" />
+    <PackageReference Include="itext7" Version="7.1.10" />
   </ItemGroup>
 
 </Project>

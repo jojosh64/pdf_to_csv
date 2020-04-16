@@ -5,28 +5,55 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
+
 
 namespace pdf_to_csv
 {
-    class Program
+    public class ParseCzech
     {
+        public static readonly String DEST = @"C:\Users\JSBru\OneDrive\Desktop\pdfcsvprojectfiles\parsed_pdf.txt";
+
+        public static readonly String SRC = @"C:\Users\JSBru\OneDrive\Desktop\pdfcsvprojectfiles\OMMA Growers List.pdf";
+
         static void Main(string[] args)
         {
-            //filepath to downloaded pdf
-            string filePath = @"C:\Users\JSBru\OneDrive\Desktop\pdfcsvprojectfiles\OMMA Growers List.pdf";
+            FileInfo file = new FileInfo(DEST);
+            file.Directory.Create();
 
-            //fetching pdf file from filepath
-            Console.WriteLine(File.ReadAllText(filePath));
+            new ParseCzech().ManipulatePdf(DEST);
 
-            
-            
-        
-            
-            
-            addLine("Jimmy", "12345", "jimmy@Gmail.com", "123-456-7891", "medicine hat", "toj2p0", "alberta", "updatedCsv.txt");
+            //addLine("Jimmy", "12345", "jimmy@Gmail.com", "123-456-7891", "medicine hat", "toj2p0", "alberta", "updatedCsv.txt");
         }
 
-        public static void addLine(string name, string licenseNo, string email, string phone, string city, string zip, string county, string filepath)
+        protected virtual void ManipulatePdf(String dest)
+        {
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(SRC));
+
+            LocationTextExtractionStrategy strategy = new LocationTextExtractionStrategy();
+
+            
+                PdfCanvasProcessor parser = new PdfCanvasProcessor(strategy);
+                    
+                parser.ProcessPageContent(pdfDoc.GetFirstPage());
+
+                byte[] array = Encoding.UTF8.GetBytes(strategy.GetResultantText());
+                using (FileStream stream = new FileStream(dest, FileMode.Create))
+                {
+                    stream.Write(array, 0, array.Length);
+                    
+                }
+                
+            
+            pdfDoc.Close();
+        }
+    }
+
+       
+        
+        /*public static void addLine(string name, string licenseNo, string email, string phone, string city, string zip, string county, string filepath)
         {
             try
             {
@@ -39,8 +66,9 @@ namespace pdf_to_csv
             {
                 throw new ApplicationException("There was an error :", ex);
             }
-        }
+        }*/
         
         
     }
-}
+
+

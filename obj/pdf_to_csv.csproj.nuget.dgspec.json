@@ -41,9 +41,9 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
-            "sautinsoft.pdffocus": {
+            "itext7": {
               "target": "Package",
-              "version": "[7.5.3.27, )"
+              "version": "[7.1.10, )"
             }
           },
           "imports": [
