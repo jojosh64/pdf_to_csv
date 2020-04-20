@@ -25,8 +25,7 @@ namespace pdf_to_csv
 
             getTextFromPdf(DEST);
 
-          
-            
+            textToString(DEST);
             
         }
 
@@ -56,36 +55,23 @@ namespace pdf_to_csv
         //parsing txt file to a string
         public static void textToString(string filepath)
         {
-            string fileText;
-            using (StreamReader text = new StreamReader(filepath, Encoding.UTF8))
+            using (StreamReader sr = File.OpenText(DEST))
             {
-                fileText = text.ReadToEnd();
+                string text = "";
+                while ((text = sr.ReadLine()) != null)
+                {
+                    Console.WriteLine(text);
+                }
             }
-
-            System.Console.WriteLine(fileText);
         }
 
         public static void toCSV(string text)
         {
             
         }
-
-
-
-      
         
 
-        
-
-
-    }
-    
-
-       
-        
-       
-        
-        
+       }
     }
 
 
