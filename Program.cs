@@ -23,50 +23,67 @@ namespace pdf_to_csv
             FileInfo file = new FileInfo(DEST);
             file.Directory.Create();
 
-            new ParseCzech().ManipulatePdf(DEST);
+            getTextFromPdf(DEST);
 
-            //addLine("Jimmy", "12345", "jimmy@Gmail.com", "123-456-7891", "medicine hat", "toj2p0", "alberta", "updatedCsv.txt");
+          
+            
+            
         }
 
-        protected virtual void ManipulatePdf(String dest)
+        //converting pdf to a txt file
+        public static void getTextFromPdf(String dest)
         {
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(SRC));
 
-            LocationTextExtractionStrategy strategy = new LocationTextExtractionStrategy();
-
-            
+            SimpleTextExtractionStrategy strategy = new SimpleTextExtractionStrategy();
+                
                 PdfCanvasProcessor parser = new PdfCanvasProcessor(strategy);
-                    
-                parser.ProcessPageContent(pdfDoc.GetFirstPage());
+            for (var i = 1; i <= pdfDoc.GetNumberOfPages(); i++)
+            {
+
+                parser.ProcessPageContent(pdfDoc.GetPage(i));
 
                 byte[] array = Encoding.UTF8.GetBytes(strategy.GetResultantText());
-                using (FileStream stream = new FileStream(dest, FileMode.Create))
+                using (FileStream stream = new FileStream(dest, FileMode.OpenOrCreate))
                 {
+                    
                     stream.Write(array, 0, array.Length);
                     
                 }
-                
-            
-            pdfDoc.Close();
+            } 
         }
+
+        //parsing txt file to a string
+        public static void textToString(string filepath)
+        {
+            string fileText;
+            using (StreamReader text = new StreamReader(filepath, Encoding.UTF8))
+            {
+                fileText = text.ReadToEnd();
+            }
+
+            System.Console.WriteLine(fileText);
+        }
+
+        public static void toCSV(string text)
+        {
+            
+        }
+
+
+
+      
+        
+
+        
+
+
     }
+    
 
        
         
-        /*public static void addLine(string name, string licenseNo, string email, string phone, string city, string zip, string county, string filepath)
-        {
-            try
-            {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath, true))
-                {
-                    file.WriteLine(name + ',' + licenseNo + ',' + email + ',' + phone + ',' + city + ',' + zip + ',' + county);
-                }
-            }
-            catch(Exception ex)
-            {
-                throw new ApplicationException("There was an error :", ex);
-            }
-        }*/
+       
         
         
     }
